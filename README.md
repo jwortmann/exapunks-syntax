@@ -21,4 +21,4 @@ Monokai, Breakers and Mariana:
 
 ## License
 
-Released under the [Apache 2.0 License](https://github.com/jwortmann/brackets-color-scheme/blob/master/LICENSE).
+Released under the [Apache 2.0 License](https://github.com/jwortmann/exapunks-syntax/blob/master/LICENSE).
