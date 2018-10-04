@@ -5,7 +5,7 @@ This package for [Sublime Text](https://www.sublimetext.com/) provides syntax hi
 
 ## Usage
 
-Copy the files `Exapunks.sublime-syntax` and `Exapunks.sublime-settings` into you user directory of Sublime Text.
+Copy the files `Exapunks.sublime-syntax` and `Exapunks.sublime-settings` into your user directory of Sublime Text.
 To find the location of your user directory, click on `Preferences > Browse Packages...` within Sublime Text.
 
 Due to there beeing no convention of a specific file extension for EXAPUNKS code, you have to manually select EXAPUNKS
@@ -16,7 +16,7 @@ the EXAPUNKS syntax whenever that file is opened.
 ## Screenshot
 
 The actual highlighting colors depend on the chosen color scheme. This is how it will look for the default color schemes
-Monokai, Breakers and Mariana:
+*Monokai*, *Breakers* and *Mariana*:
 ![Screenshot](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/screenshot.png)
 
 ## License
