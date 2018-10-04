@@ -1,0 +1,35 @@
+%YAML 1.2
+---
+name: EXAPUNKS
+scope: source.exapunks
+first_line_match: ^(?i:NOTE\sEXAPUNKS)\b
+
+contexts:
+    main:
+        # comments
+        - match: (?i:NOTE|;).*
+          scope: comment.line.exapunks
+        # basic keywords
+        - match: \b(?i:ADDI|COPY|DIVI|DROP|FILE|FJMP|GRAB|HALT|HOST|JUMP|KILL|LINK|MAKE|MARK|MODE|MODI|MULI|NOOP|RAND|REPL|SEEK|SUBI|SWIZ|TEST|TJMP|VOID|WIPE)\b
+          scope: keyword.exapunks
+        # special keywords for the test instruction
+        - match: (?i:(?<=TEST\s))\b(?i:MRD|EOF)\b
+          scope: keyword.exapunks
+        # label names
+        - match: (?i:(?<=(MARK|JUMP|TJMP|FJMP|REPL)\s).*)
+          scope: string.unqouted.exapunks
+        # registers
+        - match: \b(?i:[XTFM])\b
+          scope: constant.language.exapunks
+        # hardware registers
+        - match: (?i:#ADDR|#AUTH|#AZIM|#CASH|#CLRS|#CONT|#COOL|#COPY|#CTRL|#DATA|#DATE|#DIAL|#DISP|#ELEV|#EN3D|#FILE|#FIRE|#FREQ|#HEAT|#INVS|#LOCK|#MOTR|#NERV|#NEXT|#NSE0|#NUKE|#PADX|#PADY|#PADB|#PAGE|#PASS|#POWR|#RATE|#SAFE|#SQR0|#SQR1|#TEMP|#TIME|#TRAK|#TRI0|#ZGC0|#ZGC1|#ZGC2|#ZGC3|#ZGC4)\b
+          scope: constant.language.exapunks
+        # operators
+        - match: '[=<>]'
+          scope: keyword.operator.arithmetic.exapunks
+        # numbers
+        - match: \-?\b\d{1,4}\b
+          scope: constant.numeric.exapunks
+        # invalid numbers
+        - match: \-?\b\d{5,}\b
+          scope: invalid.illegal.exapunks
