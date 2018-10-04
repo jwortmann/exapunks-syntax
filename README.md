@@ -17,7 +17,7 @@ the EXAPUNKS syntax whenever that file is opened.
 
 The actual highlighting colors depend on the chosen color scheme. This is how it will look for the default color schemes
 Monokai, Breakers and Mariana:
-![Screenshot](https://github.com/jwortmann/exapunks-syntax/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/screenshot.png)
 
 ## License
 
