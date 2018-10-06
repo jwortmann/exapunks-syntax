@@ -15,7 +15,7 @@ the EXAPUNKS syntax whenever that file is opened.
 
 ## Screenshot
 
-The actual highlighting colors depend on the chosen color scheme. This is how it will look for the default color schemes
+The actual highlighting colors depend on the chosen color scheme. This is how it will look with the default color schemes
 *Monokai*, *Breakers* and *Mariana*:
 ![Screenshot](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/screenshot.png)
 
