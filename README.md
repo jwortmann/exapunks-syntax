@@ -8,8 +8,8 @@ This package for [Sublime Text](https://www.sublimetext.com/) provides syntax hi
 Copy the files `Exapunks.sublime-syntax` and `Exapunks.sublime-settings` into your user directory of Sublime Text.
 To find the location of your user directory, click on `Preferences > Browse Packages...` within Sublime Text.
 
-Due to there beeing no convention of a specific file extension for EXAPUNKS code, you have to manually select EXAPUNKS
-in the rightmost part of the status bar to apply syntax highlighting for the current file.
+Due to there beeing no convention of a specific file extension for EXAPUNKS code, you have to manually select User/EXAPUNKS
+under `View > Syntax` to apply syntax highlighting for the current file.
 Alternatively you can add the expression `NOTE EXAPUNKS` as a first line into your source code, to automatically apply
 the EXAPUNKS syntax whenever that file is opened.
 
