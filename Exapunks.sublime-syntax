@@ -1,41 +1,78 @@
 %YAML 1.2
 ---
 name: EXAPUNKS
+file_extensions:
+  - exapunks
 scope: source.exapunks
-first_line_match: ^(?i:NOTE\sEXAPUNKS)\b
+first_line_match: '^(?i:NOTE\sEXAPUNKS)\b'
 
 contexts:
-    main:
-        # comments
-        - match: (?i:NOTE|;).*
-          scope: comment.line.exapunks
-        # basic keywords
-        - match: \b(?i:ADDI|COPY|DIVI|DROP|FILE|FJMP|GRAB|HALT|HOST|JUMP|KILL|LINK|MAKE|MARK|MODE|MODI|MULI|NOOP|RAND|REPL|SEEK|SUBI|SWIZ|TEST|TJMP|VOID|WIPE)\b
-          scope: keyword.exapunks
-        # special keywords for the test instruction
-        - match: (?i:(?<=TEST\s))\b(?i:MRD|EOF)\b
-          scope: keyword.exapunks
-        # label names
-        - match: (?i:(?<=(MARK|JUMP|TJMP|FJMP|REPL)\s)\w+)
-          scope: string.unqouted.exapunks
-        # registers
-        - match: \b(?i:[XTFM])\b
-          scope: variable.language.exapunks
-        # hardware registers
-        - match: (?i:#ADDR|#AUTH|#AZIM|#CASH|#CLRS|#CONT|#COOL|#COPY|#CTRL|#DATA|#DATE|#DIAL|#DISP|#ELEV|#EN3D|#FILE|#FIRE|#FREQ|#HEAT|#INVS|#LOCK|#MOTR|#NERV|#NEXT|#NSE0|#NUKE|#PADX|#PADY|#PADB|#PAGE|#PASS|#POWR|#RATE|#SAFE|#SQR0|#SQR1|#TEMP|#TIME|#TRAK|#TRI0|#ZGC0|#ZGC1|#ZGC2|#ZGC3|#ZGC4)\b
-          scope: variable.language.exapunks
-        # operators
-        - match: '[=<>]'
-          scope: keyword.operator.comparison.exapunks
-        # numbers
-        - match: \-?\b\d{1,4}\b
-          scope: constant.numeric.exapunks
-        # invalid numbers
-        - match: \-?\b\d{5,}\b
-          scope: invalid.illegal.exapunks
-        # macro instruction: repeat block
-        - match: (?i:\@REP|\@END)\b
-          scope: meta.preprocessor.exapunks keyword.exapunks
-        # macro instruction: numerical constant substitution @{N,M}
-        - match: '@{|,|}'
-          scope: punctuation.macro.exapunks
+  main:
+    - include: comment
+    - include: keywords
+    - include: variables
+    - include: numbers
+    # macro instruction: repeat block
+    - match: '(?i:@REP)\b'
+      scope: keyword.control.directive.exapunks
+      push: macro-repeat
+    # invalid @END or substitution macro outside of repeat block
+    - match: '@END|@{|,|}'
+      scope: invalid.illegal.exapunks
+  comment:
+    # comments
+    - match: '(?i:NOTE|;).*'
+      scope: comment.line.exapunks
+  keywords:
+    # basic keywords
+    - match: '\b(?i:ADDI|COPY|DIVI|DROP|FILE|FJMP|GRAB|HALT|HOST|JUMP|KILL|LINK|MAKE|MARK|MODE|MODI|MULI|NOOP|RAND|REPL|SEEK|SUBI|SWIZ|TEST|TJMP|VOID|WIPE)\b'
+      scope: keyword.control.exapunks
+    # special keywords for the test instruction
+    - match: '(?i:(?<=TEST\s))\b(?i:MRD|EOF)\b'
+      scope: keyword.control.exapunks
+    # operators
+    - match: '[=<>]'
+      scope: keyword.operator.comparison.exapunks
+    # label names
+    - match: '(?i:(?<=(MARK|JUMP|TJMP|FJMP|REPL)\s)\w+)'
+      scope: string.unquoted.exapunks entity.name.label.exapunks
+  variables:
+    # registers
+    - match: '\b(?i:[XTFM])\b'
+      scope: variable.language.exapunks
+    # predefined hardware registers
+    - match: '(?i:#ADDR|#AUTH|#AZIM|#CASH|#CLRS|#CONT|#COOL|#COPY|#CTRL|#DATA|#DATE|#DIAL|#DISP|#ELEV|#EN3D|#FILE|#FIRE|#FREQ|#HEAT|#INVS|#LOCK|#MOTR|#NERV|#NEXT|#NSE0|#NUKE|#PADX|#PADY|#PADB|#PAGE|#PASS|#POWR|#RATE|#SAFE|#SQR0|#SQR1|#TEMP|#TIME|#TRAK|#TRI0|#ZGC0|#ZGC1|#ZGC2|#ZGC3|#ZGC4)\b'
+      scope: variable.language.exapunks
+    # user defined hardware registers
+    - match: '(?i:#\w{4})\b'
+      scope: variable.other.exapunks
+  numbers:
+    # numbers
+    - match: '-?\b\d{1,4}\b'
+      scope: constant.numeric.integer.exapunks
+    # invalid numbers
+    - match: '-?\b\d{5,}\b'
+      scope: invalid.illegal.exapunks
+  macro-repeat:
+    - meta_scope: meta.macro.repeat.exapunks
+    - include: comment
+    - include: keywords
+    - include: variables
+    - include: numbers
+    - match: '(?i:@END)\b'
+      scope: keyword.control.directive.exapunks
+      pop: true
+    # macro instruction: number substitution @{N,M}
+    - match: '@'
+      scope: keyword.control.directive.exapunks
+    - match: '(?<=@){'
+      scope: punctuation.section.braces.begin.exapunks
+      push: macro-substitution
+  macro-substitution:
+    - meta_scope: meta.macro.substitution.exapunks
+    - include: numbers
+    - match: ','
+      scope: punctuation.separator.exapunks
+    - match: '}'
+      scope: punctuation.section.braces.end.exapunks
+      pop: true

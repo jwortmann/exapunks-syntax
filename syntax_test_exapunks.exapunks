@@ -1,0 +1,125 @@
+; SYNTAX TEST "Exapunks.sublime-syntax"
+
+NOTE EXAPUNKS
+;^^^^^^^^^^^^ comment.line
+
+LINK 800
+;^^^ keyword.control
+;    ^^^ constant.numeric.integer
+
+MAKE ;INLINE COMMENT
+;^^^ keyword.control
+;    ^^^^^^^^^^^^^^^ comment.line
+
+COPY 10 T
+;^^^ keyword.control
+;    ^^ constant.numeric.integer
+;       ^ variable.language
+
+MARK LOOP
+;^^^ keyword.control
+;    ^^^^ entity.name.label
+
+COPY T F
+;^^^ keyword.control
+;    ^ variable.language
+;      ^ variable.language
+
+ADDI T -1 T
+;^^^ keyword.control
+;    ^ variable.language
+;      ^^ constant.numeric.integer
+;         ^ variable.language
+
+TJMP LOOP
+;^^^ keyword.control
+;    ^^^^ entity.name.label
+
+TEST EOF
+;^^^ keyword.control
+;    ^^^ keyword.control
+
+COPY #NERV X
+;^^^ keyword.control
+;    ^^^^^ variable.language
+;          ^ variable.language
+
+COPY #USER X
+;^^^ keyword.control
+;    ^^^^^ variable.other
+;          ^ variable.language
+
+; invalid number with more than 4 digits
+ADDI X 12345 T
+;^^^ keyword.control
+;    ^ variable.language
+;      ^^^^^ invalid.illegal
+;            ^ variable.language
+
+JUMPP LOOP
+;^^^^ - keyword.control
+;     ^^^^ - entity.name.label
+
+subi m 20 x
+;^^^ keyword.control
+;    ^ variable.language
+;      ^^ constant.numeric.integer
+;         ^ variable.language
+
+@REP 4
+;<- meta.macro.repeat keyword.control.directive
+;^^^ meta.macro.repeat keyword.control.directive
+;    ^ meta.macro.repeat constant.numeric.integer
+COPY F M
+;^^^ meta.macro.repeat keyword.control
+;    ^ meta.macro.repeat variable.language
+;      ^ meta.macro.repeat variable.language
+
+@END
+;<- meta.macro.repeat keyword.control.directive
+;^^^ meta.macro.repeat keyword.control.directive
+
+TEST MRD
+;^^^ keyword.control - meta.macro
+;    ^^^ keyword.control - meta.macro
+
+@REP 5
+COPY @{1,1} F
+;^^^ meta.macro.repeat keyword.control
+;    ^ meta.macro.repeat keyword.control.directive
+;     ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
+;      ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
+;       ^ meta.macro.repeat meta.macro.substitution punctuation.separator
+;        ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
+;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.end
+;           ^ meta.macro.repeat variable.language
+@END
+
+@REP 3
+TEST X = @{0,5}
+;^^^ meta.macro.repeat keyword.control
+;    ^ meta.macro.repeat variable.language
+;      ^ meta.macro.repeat keyword.operator.comparison
+;        ^ meta.macro.repeat keyword.control.directive
+;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
+;          ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
+;           ^ meta.macro.repeat meta.macro.substitution punctuation.separator
+;            ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
+;             ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.end
+
+TJMP CASE@{0,1}
+;^^^ meta.macro.repeat keyword.control
+;    ^^^^ meta.macro.repeat entity.name.label
+;        ^ meta.macro.repeat keyword.control.directive
+;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
+;          ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
+;           ^ meta.macro.repeat meta.macro.substitution punctuation.separator
+;            ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
+;             ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.end
+
+@END
+
+; invalid substitution macro outside of repeat block
+TEST X = @{0,5}
+;        ^ invalid.illegal - keyword.control.directive
+;         ^^^^^ - meta.macro
