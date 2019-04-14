@@ -19,10 +19,16 @@ contexts:
     # invalid @END or substitution macro outside of repeat block
     - match: '@END|@{|,|}'
       scope: invalid.illegal.exapunks
+
+  bail-out:
+    - match: (?=\S)
+      pop: true
+
   comment:
     # comments
     - match: '(?i:NOTE|;).*'
       scope: comment.line.exapunks
+
   keywords:
     # basic keywords
     - match: '\b(?i:ADDI|COPY|DIVI|DROP|FILE|FJMP|GRAB|HALT|HOST|JUMP|KILL|LINK|MAKE|MARK|MODE|MODI|MULI|NOOP|RAND|REPL|SEEK|SUBI|SWIZ|TEST|TJMP|VOID|WIPE)\b'
@@ -36,6 +42,7 @@ contexts:
     # label names
     - match: '(?i:(?<=(MARK|JUMP|TJMP|FJMP|REPL)\s)\w+)'
       scope: string.unquoted.exapunks entity.name.label.exapunks
+
   variables:
     # registers
     - match: '\b(?i:[XTFM])\b'
@@ -46,6 +53,7 @@ contexts:
     # user defined hardware registers
     - match: '(?i:#\w{4})\b'
       scope: variable.other.exapunks
+
   numbers:
     # numbers
     - match: '-?\b\d{1,4}\b'
@@ -53,6 +61,7 @@ contexts:
     # invalid numbers
     - match: '-?\b\d{5,}\b'
       scope: invalid.illegal.exapunks
+
   macro-repeat:
     - meta_scope: meta.macro.repeat.exapunks
     - include: comment
@@ -68,6 +77,7 @@ contexts:
     - match: '(?<=@){'
       scope: punctuation.section.braces.begin.exapunks
       push: macro-substitution
+
   macro-substitution:
     - meta_scope: meta.macro.substitution.exapunks
     - include: numbers
@@ -76,3 +86,4 @@ contexts:
     - match: '}'
       scope: punctuation.section.braces.end.exapunks
       pop: true
+    - include: bail-out
