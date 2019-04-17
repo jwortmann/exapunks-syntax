@@ -6,10 +6,10 @@ This package for [Sublime Text 3](https://www.sublimetext.com/) provides syntax 
 
 ## Usage
 
-Copy the files `Exapunks.sublime-syntax` and `Exapunks.sublime-settings` into your user directory of Sublime Text.
+Copy the files [Exapunks.sublime-syntax](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/Exapunks.sublime-syntax) and [Exapunks.sublime-settings](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/Exapunks.sublime-settings) into your user directory of Sublime Text.
 To find the location of your user directory, click on `Preferences > Browse Packages...` within Sublime Text and open the folder `User`.
 
-There is no convention for a specific file extension of EXAPUNKS code, but if you use the file extension `.exapunks`, syntax highlighting should be applied to your files.
+There is no convention for a specific file extension of EXAPUNKS code that I'm aware of, but if you use the file extension `.exapunks`, syntax highlighting should be applied to your files.
 Alternatively you can manually select *User/EXAPUNKS* under `View > Syntax` or add the expression `NOTE EXAPUNKS` as a first line into your source code to automatically apply the EXAPUNKS syntax, whenever that file is opened.
 
 ## Screenshot
