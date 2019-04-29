@@ -8,8 +8,10 @@ first_line_match: '^(?i:NOTE\sEXAPUNKS)\b'
 
 contexts:
   main:
-    - include: comment
-    - include: keywords
+    - include: comments
+    - include: instructions
+    - include: operators
+    - include: labels
     - include: variables
     - include: numbers
     # macro instruction: repeat block
@@ -24,35 +26,69 @@ contexts:
     - match: (?=\S)
       pop: true
 
-  comment:
+  comments:
     # comments
-    - match: '(?i:NOTE|;).*'
-      scope: comment.line.exapunks
+    - match: ';'
+      scope: comment.line.semicolon.exapunks punctuation.definition.comment.exapunks
+    - match: '^\s*(?i:NOTE).*$'
+      scope: comment.line.note.exapunks
+    - match: '(?<=;).*$'
+      scope: comment.line.semicolon.exapunks
 
-  keywords:
-    # basic keywords
-    - match: '\b(?i:ADDI|COPY|DIVI|DROP|FILE|FJMP|GRAB|HALT|HOST|JUMP|KILL|LINK|MAKE|MARK|MODE|MODI|MULI|NOOP|RAND|REPL|SEEK|SUBI|SWIZ|TEST|TJMP|VOID|WIPE)\b'
-      scope: keyword.control.exapunks
-    # special keywords for the test instruction
-    - match: '(?i:(?<=TEST\s))\b(?i:MRD|EOF)\b'
-      scope: keyword.control.exapunks
-    # operators
+  instructions:
+    # manipulating values
+    - match: '\b(?i:COPY|ADDI|SUBI|MULI|DIVI|MODI|SWIZ|RAND)\b'
+      scope: support.function.arithmetic.exapunks
+    # lifecycle
+    - match: '\b(?i:REPL|HALT|KILL)\b'
+      scope: support.function.lifecycle.exapunks
+    # movement
+    - match: '\b(?i:LINK|HOST)\b'
+      scope: support.function.movement.exapunks
+    # communication
+    - match: '\b(?i:MODE|VOID(?=\sM))\b'
+      scope: support.function.communication.exapunks
+    # file manipulation
+    - match: '\b(?i:MAKE|GRAB|FILE|SEEK|DROP|WIPE|VOID(?=\sF))\b'
+      scope: support.function.file-manipulation.exapunks
+    # testing values
+    - match: '\b(?i:TEST)\b'
+      scope: support.function.test.exapunks
+    # special parameters for the test instruction
+    - match: '(?i:(?<=TEST\s)MRD|EOF)\b'
+      scope: support.constant.test.exapunks
+    # label definition
+    - match: '\b(?i:MARK)\b'
+      scope: keyword.declaration.label.exapunks
+    # branching
+    - match: '\b(?i:JUMP|TJMP|FJMP)\b'
+      scope: keyword.control.flow.goto.exapunks
+    # miscellaneous
+    - match: '\b(?i:NOOP|VOID)\b'
+      scope: support.function.exapunks
+
+  operators:
     - match: '[=<>]'
       scope: keyword.operator.comparison.exapunks
-    # label names
-    - match: '(?i:(?<=(MARK|JUMP|TJMP|FJMP|REPL)\s)\w+)'
-      scope: string.unquoted.exapunks entity.name.label.exapunks
+
+  labels:
+    # label names when defined
+    - match: '(?i:(?<=MARK\s)\w+)'
+      scope: entity.name.label.exapunks
+    # label names when referenced
+    - match: '(?i:(?<=(JUMP|TJMP|FJMP|REPL)\s)\w+)'
+      scope: variable.label.exapunks
 
   variables:
     # registers
     - match: '\b(?i:[XTFM])\b'
-      scope: variable.language.exapunks
+      scope: variable.language.register.exapunks
     # predefined hardware registers
-    - match: '(?i:#ADDR|#AUTH|#AZIM|#CASH|#CLRS|#CONT|#COOL|#COPY|#CTRL|#DATA|#DATE|#DIAL|#DISP|#ELEV|#EN3D|#FILE|#FIRE|#FREQ|#HEAT|#INVS|#LOCK|#MOTR|#NERV|#NEXT|#NSE0|#NUKE|#PADX|#PADY|#PADB|#PAGE|#PASS|#POWR|#RATE|#SAFE|#SQR0|#SQR1|#TEMP|#TIME|#TRAK|#TRI0|#ZGC0|#ZGC1|#ZGC2|#ZGC3|#ZGC4)\b'
-      scope: variable.language.exapunks
+    - match: '#(?i:ADDR|AUTH|AZIM|CASH|CLRS|CONT|COOL|COPY|CTRL|DATA|DATE|DIAL|DISP|ELEV|EN3D|FILE|FIRE|FREQ|HEAT|INVS|LOCK|MOTR|NERV|NEXT|NSE0|NUKE|PADX|PADY|PADB|PAGE|PASS|POWR|RATE|SAFE|SQR0|SQR1|TEMP|TIME|TRAK|TRI0|ZGC0|ZGC1|ZGC2|ZGC3|ZGC4)\b'
+      scope: variable.language.hardware-register.exapunks
     # user defined hardware registers
-    - match: '(?i:#\w{4})\b'
-      scope: variable.other.exapunks
+    - match: '#\w{4}\b'
+      scope: variable.other.hardware-register.exapunks
 
   numbers:
     # numbers
@@ -60,12 +96,14 @@ contexts:
       scope: constant.numeric.integer.exapunks
     # invalid numbers
     - match: '-?\b\d{5,}\b'
-      scope: invalid.illegal.exapunks
+      scope: invalid.illegal.outsized-number.exapunks
 
   macro-repeat:
     - meta_scope: meta.macro.repeat.exapunks
-    - include: comment
-    - include: keywords
+    - include: comments
+    - include: instructions
+    - include: operators
+    - include: labels
     - include: variables
     - include: numbers
     - match: '(?i:@END)\b'

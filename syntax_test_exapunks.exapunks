@@ -4,101 +4,101 @@ NOTE EXAPUNKS
 ;^^^^^^^^^^^^ comment.line
 
 LINK 800
-;^^^ keyword.control
+;^^^ support.function.movement
 ;    ^^^ constant.numeric.integer
 
 MAKE ;INLINE COMMENT
-;^^^ keyword.control
+;^^^ support.function.file-manipulation
 ;    ^^^^^^^^^^^^^^^ comment.line
-
+;    ^ punctuation.definition.comment
 COPY 10 T
-;^^^ keyword.control
+;^^^ support.function.arithmetic
 ;    ^^ constant.numeric.integer
-;       ^ variable.language
+;       ^ variable.language.register
 
 MARK LOOP
-;^^^ keyword.control
+;^^^ keyword.declaration.label
 ;    ^^^^ entity.name.label
 
 COPY T F
-;^^^ keyword.control
-;    ^ variable.language
-;      ^ variable.language
+;^^^ support.function.arithmetic
+;    ^ variable.language.register
+;      ^ variable.language.register
 
 ADDI T -1 T
-;^^^ keyword.control
-;    ^ variable.language
+;^^^ support.function.arithmetic
+;    ^ variable.language.register
 ;      ^^ constant.numeric.integer
-;         ^ variable.language
+;         ^ variable.language.register
 
 TJMP LOOP
-;^^^ keyword.control
-;    ^^^^ entity.name.label
+;^^^ keyword.control.flow.goto
+;    ^^^^ variable.label
 
 TEST EOF
-;^^^ keyword.control
-;    ^^^ keyword.control
+;^^^ support.function.test
+;    ^^^ support.constant.test
 
 COPY #NERV X
-;^^^ keyword.control
-;    ^^^^^ variable.language
-;          ^ variable.language
+;^^^ support.function.arithmetic
+;    ^^^^^ variable.language.hardware-register
+;          ^ variable.language.register
 
 COPY #USER X
-;^^^ keyword.control
-;    ^^^^^ variable.other
-;          ^ variable.language
+;^^^ support.function.arithmetic
+;    ^^^^^ variable.other.hardware-register
+;          ^ variable.language.register
 
 ; invalid number with more than 4 digits
 ADDI X 12345 T
-;^^^ keyword.control
-;    ^ variable.language
+;^^^ support.function.arithmetic
+;    ^ variable.language.register
 ;      ^^^^^ invalid.illegal
-;            ^ variable.language
+;            ^ variable.language.register
 
 JUMPP LOOP
-;^^^^ - keyword.control
-;     ^^^^ - entity.name.label
+;^^^^ - keyword
+;     ^^^^ - variable.label
 
 subi m 20 x
-;^^^ keyword.control
-;    ^ variable.language
+;^^^ support.function.arithmetic
+;    ^ variable.language.register
 ;      ^^ constant.numeric.integer
-;         ^ variable.language
+;         ^ variable.language.register
 
 @REP 4
 ;<- meta.macro.repeat keyword.control.directive
 ;^^^ meta.macro.repeat keyword.control.directive
 ;    ^ meta.macro.repeat constant.numeric.integer
 COPY F M
-;^^^ meta.macro.repeat keyword.control
-;    ^ meta.macro.repeat variable.language
-;      ^ meta.macro.repeat variable.language
+;^^^ meta.macro.repeat support.function.arithmetic
+;    ^ meta.macro.repeat variable.language.register
+;      ^ meta.macro.repeat variable.language.register
 
 @END
 ;<- meta.macro.repeat keyword.control.directive
 ;^^^ meta.macro.repeat keyword.control.directive
 
 TEST MRD
-;^^^ keyword.control - meta.macro
-;    ^^^ keyword.control - meta.macro
+;^^^ support.function.test - meta.macro
+;    ^^^ support.constant.test - meta.macro
 
 @REP 5
 COPY @{1,1} F
-;^^^ meta.macro.repeat keyword.control
+;^^^ meta.macro.repeat support.function.arithmetic
 ;    ^ meta.macro.repeat keyword.control.directive
 ;     ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
 ;      ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
 ;       ^ meta.macro.repeat meta.macro.substitution punctuation.separator
 ;        ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
 ;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.end
-;           ^ meta.macro.repeat variable.language
+;           ^ meta.macro.repeat variable.language.register
 @END
 
 @REP 3
 TEST X = @{0,5}
-;^^^ meta.macro.repeat keyword.control
-;    ^ meta.macro.repeat variable.language
+;^^^ meta.macro.repeat support.function.test
+;    ^ meta.macro.repeat variable.language.register
 ;      ^ meta.macro.repeat keyword.operator.comparison
 ;        ^ meta.macro.repeat keyword.control.directive
 ;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
@@ -108,8 +108,8 @@ TEST X = @{0,5}
 ;             ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.end
 
 TJMP CASE@{0,1}
-;^^^ meta.macro.repeat keyword.control
-;    ^^^^ meta.macro.repeat entity.name.label
+;^^^ meta.macro.repeat keyword.control.flow.goto
+;    ^^^^ meta.macro.repeat variable.label
 ;        ^ meta.macro.repeat keyword.control.directive
 ;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
 ;          ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
