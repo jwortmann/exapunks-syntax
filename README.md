@@ -12,10 +12,13 @@ To find the location of your User package, choose `Preferences > Browse Packages
 There is no convention for a specific file extension of EXAPUNKS code that I'm aware of, but if you use the file extension `.exapunks`, syntax highlighting should be applied to your files.
 Alternatively you can manually select *User/EXAPUNKS* under `View > Syntax` from the menu or add the expression `NOTE EXAPUNKS` as a first line into your source code to automatically apply the EXAPUNKS syntax, whenever that file is opened.
 
+To enable code completions, copy the file [Exapunks.sublime-completions](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/Exapunks.sublime-completions).
+
 ## Preview
 
 The actual highlighting colors depend on the chosen color scheme.
 The following image shows a preview for the default color schemes *Monokai*, *Sixteen* and *Mariana*:
+
 ![Screenshot](https://raw.githubusercontent.com/jwortmann/exapunks-syntax/master/screenshot.png)
 
 Some of the syntax rules were updated to follow Sublime Text's scope naming guidelines and assign more specific scopes.
