@@ -30,9 +30,9 @@ contexts:
     # comments
     - match: ';'
       scope: comment.line.semicolon.exapunks punctuation.definition.comment.exapunks
-    - match: '^\s*(?i:NOTE).*$'
+    - match: '^\s*(?i:NOTE).*$\n?'
       scope: comment.line.note.exapunks
-    - match: '(?<=;).*$'
+    - match: '(?<=;).*$\n?'
       scope: comment.line.semicolon.exapunks
 
   instructions:
