@@ -86,7 +86,7 @@ TEST MRD
 @REP 5
 COPY @{1,1} F
 ;^^^ meta.macro.repeat support.function.arithmetic
-;    ^ meta.macro.repeat keyword.control.directive
+;    ^ meta.macro.repeat meta.macro.substitution keyword.control.directive
 ;     ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
 ;      ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
 ;       ^ meta.macro.repeat meta.macro.substitution punctuation.separator
@@ -100,7 +100,7 @@ TEST X = @{0,5}
 ;^^^ meta.macro.repeat support.function.test
 ;    ^ meta.macro.repeat variable.language.register
 ;      ^ meta.macro.repeat keyword.operator.comparison
-;        ^ meta.macro.repeat keyword.control.directive
+;        ^ meta.macro.repeat meta.macro.substitution keyword.control.directive
 ;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
 ;          ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
 ;           ^ meta.macro.repeat meta.macro.substitution punctuation.separator
@@ -110,7 +110,7 @@ TEST X = @{0,5}
 TJMP CASE@{0,1}
 ;^^^ meta.macro.repeat keyword.control.flow.goto
 ;    ^^^^ meta.macro.repeat variable.label
-;        ^ meta.macro.repeat keyword.control.directive
+;        ^ meta.macro.repeat meta.macro.substitution keyword.control.directive
 ;         ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.begin
 ;          ^ meta.macro.repeat meta.macro.substitution constant.numeric.integer
 ;           ^ meta.macro.repeat meta.macro.substitution punctuation.separator

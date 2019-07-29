@@ -2,6 +2,7 @@
 ---
 name: EXAPUNKS
 file_extensions:
+  - exa
   - exapunks
 scope: source.exapunks
 first_line_match: '^(?i:NOTE\sEXAPUNKS)\b'
@@ -19,21 +20,16 @@ contexts:
       scope: keyword.control.directive.exapunks
       push: macro-repeat
     # invalid @END or substitution macro outside of repeat block
-    - match: '@END|@{|,|}'
+    - match: '@END|@{|{|,|}'
       scope: invalid.illegal.exapunks
 
-  bail-out:
-    - match: (?=\S)
-      pop: true
-
   comments:
-    # comments
-    - match: ';'
-      scope: comment.line.semicolon.exapunks punctuation.definition.comment.exapunks
+    - match: '((;).*$\n?)'
+      captures:
+        1: comment.line.semicolon.exapunks
+        2: punctuation.definition.comment.exapunks
     - match: '^\s*(?i:NOTE).*$\n?'
       scope: comment.line.note.exapunks
-    - match: '(?<=;).*$\n?'
-      scope: comment.line.semicolon.exapunks
 
   instructions:
     # manipulating values
@@ -55,8 +51,9 @@ contexts:
     - match: '\b(?i:TEST)\b'
       scope: support.function.test.exapunks
     # special parameters for the test instruction
-    - match: '(?i:(?<=TEST\s)MRD|EOF)\b'
-      scope: support.constant.test.exapunks
+    - match: '(?i:(?<=TEST)(\s+)(MRD|EOF))\b'
+      captures:
+        2: support.constant.test.exapunks
     # label definition
     - match: '\b(?i:MARK)\b'
       scope: keyword.declaration.label.exapunks
@@ -68,7 +65,7 @@ contexts:
       scope: support.function.exapunks
 
   operators:
-    - match: '[=<>]'
+    - match: '=|<|>'
       scope: keyword.operator.comparison.exapunks
 
   labels:
@@ -109,19 +106,22 @@ contexts:
     - match: '(?i:@END)\b'
       scope: keyword.control.directive.exapunks
       pop: true
-    # macro instruction: number substitution @{N,M}
+    - match: '(@)({)'
+      captures:
+        1: keyword.control.directive.exapunks
+        2: punctuation.section.braces.begin.exapunks
+      push: macro-substitution
     - match: '@'
       scope: keyword.control.directive.exapunks
-    - match: '(?<=@){'
-      scope: punctuation.section.braces.begin.exapunks
-      push: macro-substitution
 
+  # macro instruction: number substitution @{N,M}
   macro-substitution:
     - meta_scope: meta.macro.substitution.exapunks
-    - include: numbers
     - match: ','
       scope: punctuation.separator.exapunks
     - match: '}'
       scope: punctuation.section.braces.end.exapunks
       pop: true
-    - include: bail-out
+    - include: numbers
+    - match: (?=\S)
+      pop: true
