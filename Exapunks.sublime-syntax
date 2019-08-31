@@ -8,73 +8,125 @@ scope: source.exapunks
 first_line_match: '^(?i:NOTE\sEXAPUNKS)\b'
 
 contexts:
+  prototype:
+    - match: ';'
+      scope: punctuation.definition.comment.exapunks
+      push:
+        - meta_scope: comment.line.semicolon.exapunks
+        - match: $\n?
+          pop: true
+
   main:
-    - include: comments
     - include: instructions
-    - include: operators
-    - include: labels
-    - include: variables
-    - include: numbers
-    # macro instruction: repeat block
-    - match: '(?i:@REP)\b'
-      scope: keyword.control.directive.exapunks
-      push: macro-repeat
+    - include: macro
     # invalid @END or substitution macro outside of repeat block
     - match: '@END|@{|{|,|}'
       scope: invalid.illegal.exapunks
 
-  comments:
-    - match: '((;).*$\n?)'
-      captures:
-        1: comment.line.semicolon.exapunks
-        2: punctuation.definition.comment.exapunks
-    - match: '^\s*(?i:NOTE).*$\n?'
-      scope: comment.line.note.exapunks
-
   instructions:
+    # comment
+    - match: \b(?i:NOTE)\b
+      push:
+        - meta_scope: comment.line.note.exapunks
+        - match: $\n?
+          pop: true
     # manipulating values
     - match: '\b(?i:COPY|ADDI|SUBI|MULI|DIVI|MODI|SWIZ|RAND)\b'
-      scope: support.function.arithmetic.exapunks
+      scope: meta.function-call.exapunks support.function.arithmetic.exapunks
+      push: function-arguments
     # lifecycle
-    - match: '\b(?i:REPL|HALT|KILL)\b'
-      scope: support.function.lifecycle.exapunks
+    - match: '\b(?i:REPL)'
+      scope: meta.function-call.exapunks support.function.lifecycle.exapunks
+      push:
+        - meta_content_scope: meta.label-name.exapunks
+        # label names when referenced
+        - match: \w+
+          scope: variable.label.exapunks
+        - include: number-substitution
+        - match: $\n?
+          scope: meta.label-name.exapunks
+          pop: true
+    - match: '\b(?i:HALT|KILL)\b'
+      scope: meta.function-call.exapunks support.function.lifecycle.exapunks
     # movement
     - match: '\b(?i:LINK|HOST)\b'
-      scope: support.function.movement.exapunks
+      scope: meta.function-call.exapunks support.function.movement.exapunks
+      push: function-arguments
     # communication
     - match: '\b(?i:MODE|VOID(?=\sM))\b'
-      scope: support.function.communication.exapunks
+      scope: meta.function-call.exapunks support.function.communication.exapunks
+      push: function-arguments
     # file manipulation
     - match: '\b(?i:MAKE|GRAB|FILE|SEEK|DROP|WIPE|VOID(?=\sF))\b'
-      scope: support.function.file-manipulation.exapunks
+      scope: meta.function-call.exapunks support.function.file-manipulation.exapunks
+      push: function-arguments
     # testing values
     - match: '\b(?i:TEST)\b'
-      scope: support.function.test.exapunks
-    # special parameters for the test instruction
-    - match: '(?i:(?<=TEST)(\s+)(MRD|EOF))\b'
-      captures:
-        2: support.constant.test.exapunks
+      scope: meta.function-call.exapunks support.function.test.exapunks
+      push: test-arguments
     # label definition
     - match: '\b(?i:MARK)\b'
       scope: keyword.declaration.label.exapunks
+      push:
+        - meta_content_scope: meta.label-name.exapunks
+        # label names when defined
+        - match: \w+
+          scope: entity.name.label.exapunks
+        - include: number-substitution
+        - match: $\n?
+          scope: meta.label-name.exapunks
+          pop: true
     # branching
     - match: '\b(?i:JUMP|TJMP|FJMP)\b'
       scope: keyword.control.flow.goto.exapunks
+      push:
+        - meta_content_scope: meta.label-name.exapunks
+        # label names when referenced
+        - match: \w+
+          scope: variable.label.exapunks
+        - include: number-substitution
+        - match: $\n?
+          scope: meta.label-name.exapunks
+          pop: true
     # miscellaneous
     - match: '\b(?i:NOOP|VOID)\b'
-      scope: support.function.exapunks
+      scope: meta.function-call.exapunks support.function.exapunks
+      push: function-arguments
 
-  operators:
-    - match: '=|<|>'
-      scope: keyword.operator.comparison.exapunks
+  macro:
+    # macro instruction: repeat block
+    - match: '(?i:@REP)\b'
+      scope: keyword.control.directive.exapunks
+      push:
+        - meta_scope: meta.macro.repeat.exapunks
+        - include: numbers
+        - match: $\n?
+          set:
+            - meta_content_scope: meta.macro.repeat.exapunks
+            - include: instructions
+            - match: '(?i:@END)\b'
+              scope: meta.macro.repeat.exapunks keyword.control.directive.exapunks
+              pop: true
 
-  labels:
-    # label names when defined
-    - match: '(?i:(?<=MARK\s)\w+)'
-      scope: entity.name.label.exapunks
-    # label names when referenced
-    - match: '(?i:(?<=(JUMP|TJMP|FJMP|REPL)\s)\w+)'
-      scope: variable.label.exapunks
+  function-arguments:
+    - meta_content_scope: meta.function-call.arguments.exapunks
+    - include: variables
+    - include: numbers
+    - match: $\n?
+      scope: meta.function-call.arguments.exapunks
+      pop: true
+
+  test-arguments:
+    - meta_content_scope: meta.function-call.arguments.exapunks
+    - include: variables
+    - include: numbers
+    - include: operators
+    # special parameters for the test instruction
+    - match: '\b(?i:MRD|EOF)\b'
+      scope: support.constant.exapunks
+    - match: $\n?
+      scope: meta.function-call.arguments.exapunks
+      pop: true
 
   variables:
     # registers
@@ -86,6 +138,7 @@ contexts:
     # user defined hardware registers
     - match: '#\w{4}\b'
       scope: variable.other.hardware-register.exapunks
+    - include: number-substitution
 
   numbers:
     # numbers
@@ -95,33 +148,23 @@ contexts:
     - match: '-?\b\d{5,}\b'
       scope: invalid.illegal.outsized-number.exapunks
 
-  macro-repeat:
-    - meta_scope: meta.macro.repeat.exapunks
-    - include: comments
-    - include: instructions
-    - include: operators
-    - include: labels
-    - include: variables
-    - include: numbers
-    - match: '(?i:@END)\b'
-      scope: keyword.control.directive.exapunks
-      pop: true
+  number-substitution:
+    # macro instruction: number substitution @{N,M}
     - match: '(@)({)'
       captures:
         1: keyword.control.directive.exapunks
         2: punctuation.section.braces.begin.exapunks
-      push: macro-substitution
-    - match: '@'
-      scope: keyword.control.directive.exapunks
+      push:
+        - meta_scope: meta.macro.substitution.exapunks
+        - match: ','
+          scope: punctuation.separator.exapunks
+        - match: '}'
+          scope: punctuation.section.braces.end.exapunks
+          pop: true
+        - include: numbers
+        - match: $\n?
+          pop: true
 
-  # macro instruction: number substitution @{N,M}
-  macro-substitution:
-    - meta_scope: meta.macro.substitution.exapunks
-    - match: ','
-      scope: punctuation.separator.exapunks
-    - match: '}'
-      scope: punctuation.section.braces.end.exapunks
-      pop: true
-    - include: numbers
-    - match: (?=\S)
-      pop: true
+  operators:
+    - match: '=|<|>'
+      scope: keyword.operator.comparison.exapunks

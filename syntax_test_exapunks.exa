@@ -4,8 +4,8 @@ NOTE EXAPUNKS
 ;^^^^^^^^^^^^ comment.line
 
 LINK 800
-;^^^ support.function.movement
-;    ^^^ constant.numeric.integer
+;^^^ meta.function-call support.function.movement
+;    ^^^ meta.function-call.arguments constant.numeric.integer
 
 MAKE ;INLINE COMMENT
 ;^^^ support.function.file-manipulation
@@ -18,7 +18,7 @@ COPY 10 T
 
 MARK LOOP
 ;^^^ keyword.declaration.label
-;    ^^^^ entity.name.label
+;    ^^^^ meta.label-name entity.name.label
 
 COPY T F
 ;^^^ support.function.arithmetic
@@ -33,11 +33,11 @@ ADDI T -1 T
 
 TJMP LOOP
 ;^^^ keyword.control.flow.goto
-;    ^^^^ variable.label
+;    ^^^^ meta.label-name variable.label
 
 TEST EOF
 ;^^^ support.function.test
-;    ^^^ support.constant.test
+;    ^^^ support.constant
 
 COPY #NERV X
 ;^^^ support.function.arithmetic
@@ -81,7 +81,7 @@ COPY F M
 
 TEST MRD
 ;^^^ support.function.test - meta.macro
-;    ^^^ support.constant.test - meta.macro
+;    ^^^ support.constant - meta.macro
 
 @REP 5
 COPY @{1,1} F
@@ -118,8 +118,3 @@ TJMP CASE@{0,1}
 ;             ^ meta.macro.repeat meta.macro.substitution punctuation.section.braces.end
 
 @END
-
-; invalid substitution macro outside of repeat block
-TEST X = @{0,5}
-;        ^ invalid.illegal - keyword.control.directive
-;         ^^^^^ - meta.macro
